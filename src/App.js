@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
+import Axios from 'axios';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  
+constructor(props) {
+  super(props)
+  
+  // state
+  this.state = {
+    users: []
+  }
 }
+
+componentWillMount() {
+
+  Axios(`https://api.randomuser.me/?nat=US&results=5`)
+  .then(response => this.setState({
+    users: response.data.results
+   })
+  );
+ }
+
+  render(){
+
+    return <div className='app'>
+      {this.state.users.map(user => <div key={user.id.value}>{user.cell}</div>)}
+      </div>;
+  }
+};
 
 export default App;
