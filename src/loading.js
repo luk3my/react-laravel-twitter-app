@@ -1,5 +1,5 @@
 import React from "react";
 
-const loading = () => <h2>Loading</h2>;
+const loading = ({ message }) => <h2>{message}</h2>;
 
 export default loading;

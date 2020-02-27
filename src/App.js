@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
-import Loading from './loading';
+import Loading from "./loading";
 import "./App.css";
 
 class App extends Component {
@@ -12,6 +12,8 @@ class App extends Component {
       users: [],
       loading: false
     };
+    //bind function
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   getUsers() {
@@ -20,10 +22,15 @@ class App extends Component {
     });
     Axios(`https://api.randomuser.me/?nat=US&results=5`).then(response =>
       this.setState({
-        users: response.data.results,
+        users: [...this.state.users, ...response.data.results],
         loading: false
       })
     );
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    this.getUsers();
   }
 
   componentWillMount() {
@@ -31,18 +38,22 @@ class App extends Component {
   }
 
   render() {
+    const { loading, users } = this.state;
     return (
-      <div className="app">
-        {!this.state.loading ? (
-          this.state.users.map(user => (
+      <div className="app" style={{marginLeft: '10px'}}>
+        <form onSubmit={this.handleSubmit}>
+          <input type="submit" value="load users" />
+        </form>
+        {!loading ? (
+          users.map(user => (
             <div key={user.id.value}>
-              <h3>{user.name.first}</h3>
+              <h3 style={{ color: "red" }}>{user.name.first}</h3>
               <p>{user.email}</p>
               <hr />
             </div>
           ))
         ) : (
-          <Loading />
+          <Loading message="Loading" />
         )}
       </div>
     );
